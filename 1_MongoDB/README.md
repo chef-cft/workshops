@@ -1,45 +1,91 @@
-# Install MongoDB
 
-MongoDB is an open-source, document-oriented database designed for ease of development and scaling.  The MongoDB documentation site includes a [tutorial on how to install MongoDB on RHEL-based system](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-red-hat-centos-or-fedora-linux/).
+# Usage
+Assumption: You have a virtualbox with centOs7 and ChefDk 2.4.17
+1) Copy the cookook to your virtualBox running CentOs 7 and ChefDk kit ver 2.4.17.
+2) Login as super user on terminal. 
+3) Change working directory to <base dir where you copied the cookbook>/cookbooks/mongodb.
+4) Run mongo install cookbook :
+	sudo chef-client --local-mode recipes/default.rb 
 
-## Goal
+# Test
+ From terminal, login mongo shell:
 
-Use Chef to successfully install MongoDB on a RHEL-based target system.
+ 	> mongo
+ 
+ Result: 
+ 	You are now logged in:
+	root@osboxes mongodb]# mongo
+	MongoDB shell version v3.6.2
+	connecting to: mongodb://127.0.0.1:27017
+	MongoDB server version: 3.6.2
+	-etc.(truncated)----
 
-## Success Criteria
 
-You should be prepared and able to demonstrate the following:
+#  Setup & Environment 
+Note : This setup was done one time to set the environment of my virtualBox using centOS7 
+and ChefDk kit ver 2.4.17
 
-* Your Chef cookbook successfully executes on your target node without errors
-* Your Chef cookbook is portable and can be run by Chef to validate your work. Please include any instructions or assumptions needed to successfully execute your cookbook.
-* You can login to MongoDB by typing `mongo` on the target system
-* You can run `chef-client` multiple times without failures
-* Your GitHub.com source code repository shows the history of your work
+1) Downloaded and install VirtualBox running CentOs 7 - Linux 64 bit
+2) Install chef in the virtual machine using the command: 
+> $ sudo rpm -Uvh https://packages.chef.io/files/stable/chefdk/2.4.17/el/7/chefdk-2.4.17-1.el7.x86_64.rpm
 
-You should be able to explain the following:
+Result: 
+Retrieving https://packages.chef.io/files/stable/chefdk/2.4.17/el/7/chefdk-2.4.17-1.el7.x86_64.rpm
+----etc [Truncated]
+Thank you for installing Chef Development Kit!
 
-* Steps taken to achieve the end result
-* Build and test process of Chef code
-* Tools and resources used in the process
+3) Now set the Ruby version to be used as the Chefdk version:
+	Ruby Version set to chef sdk ver:
+	echo 'export PATH="/opt/chefdk/embedded/bin:$PATH"' >> ~/.configuration_file && source ~/.configuration_file
+	echo 'export PATH="/opt/chefdk/embedded/bin:$PATH"' >> ~/.bash_profile && source ~/.bash_profile
 
->Note: You are NOT required to use Chef Server for this exercise, but you may if that is your preference.
+# MongoDB-install Chef Recipe creation instructions: 
 
-## Instructions
+1) Create a directory called mongo-chef.  We will use this directory to store the recipe to install mongo Db
+We have already downloaded chef Sdk in the previous step 
+2) Rebooted my Virtual box and logged in as root
+3) create a dir for chef repository, here we will generate and store all our cookbooks.
+4) [root@osboxes /]# mkdir mongo-chef
+5) mkdir cookbook
+	RESULT:
+    		[root@osboxes mongo-chef]# ls
+		cookbooks
 
-* Translate the MongoDB installation instructions from `install.rb` into Chef code that completes the installation
-* Use the Chef [Resources Reference](https://docs.chef.io/resources.html) to find the most appropriate Chef resources to use for each task
-* Once you feel you have met the success criteria outlined above, send a link to your GitHub.com repo to the person coordinating these workshops
-* Provide instructions for us to run your cookbook so that we can test your work.
+6) Next, generate a cookbook for all mongoldb installation instructions:
+	[root@osboxes mongo-chef]# chef generate cookbook cookbooks/mongodb
+	RESULT:
+	Generating cookbook mongodb
+	- [Truncated] ..
+	Your cookbook is ready. Type `cd cookbooks/mongodb` to enter it.
 
-There are a couple of ways that you can write, test and run your cookbook.
+7) Check the directory structure. I have already installed the tree package to view directories as tree 
+[root@osboxes mongodb]# tree
+.
+	├── Berksfile
+	├── chefignore
+	├── LICENSE
+	├── metadata.rb
+	├── README.md
+	├── recipes
+	│   └── default.rb
+	├── spec
+	│   	├── spec_helper.rb
+	│   └── unit
+	│	└── recipes
+	│           └── default_spec.rb
+	└── test
+   	 └── smoke
+      	  └── default
+            └── default_test.rb
+7 directories, 9 files
 
-* Write and test your cookbook locally using Test Kitchen via Vagrant + Virtual Box, or the cloud platform of your choice.
-  * Steps for this option are outlined [here](https://learn.chef.io/tutorials/local-development/)
-* Develop directly on your RHEL-based virtual machine
-  * Write your cookbook in vim, nano or emacs, and run `chef-client` in `--local-mode`
-  * The ChefDK or Chef Client must be installed on the VM first
+8)  Create a recipe file where I will enter the resources and actions to perform on each resource to install mongoldb. 
 
-## Suggested Resources
+9) Now run the Cookbook:
+[root@osboxes recipes]# chef-client --local-mode default.rb 
+ RESULT - 5X unsuccessful runs with errors - please see unsucessful_runs.txt, with possible issues and solutions.
 
-* Use the [Chef Documentation](http://docs.chef.io) to identify and use resources that will help you model the desired state of your infrastructure.
-* [MongoDB Installation Instructions](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat/)
+ 6 th time sucess!
+
+
+
